@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Data Governance & Life Cycle Simulator</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --card-hover: #334155;
+            --primary: #38bdf8;
+            --primary-hover: #0ea5e9;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #22c55e;
+            --success-bg: rgba(34, 197, 94, 0.1);
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.1);
+            --border: #334155;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e293b, #0284c7);
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2.2rem;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Stages Grid */
+        .stages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stage-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stage-card:hover {
+            transform: translateY(-4px);
+            background: var(--card-hover);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px -10px rgba(56, 189, 248, 0.3);
+        }
+
+        .stage-card.active {
+            border-color: var(--primary);
+            background: rgba(56, 189, 248, 0.05);
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .stage-num {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+
+        .stage-card h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+            color: var(--text-main);
+        }
+
+        .stage-card p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Detail Box */
+        .stage-detail-box {
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stage-detail-box h2 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 1.6rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.2rem;
+        }
+
+        .detail-item {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .detail-item h4 {
+            margin: 0 0 0.3rem 0;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        .detail-item p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Tool Container */
+        .tool-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.85rem;
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+        }
+
+        button.btn-primary {
+            background-color: var(--primary);
+            color: #0f172a;
+            border: none;
+            padding: 0.85rem 2rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        button.btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .result-box {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            border-radius: 8px;
+            display: none;
+            font-weight: 500;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .result-success {
+            background-color: var(--success-bg);
+            color: var(--success);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .result-error {
+            background-color: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: #0b1120;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        footer .creator {
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 0.5rem;
+            font-size: 1.05rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Hospital Data Governance & Life Cycle Simulator</h1>
+        <p>Interactive Academic Demonstration (Case Study: John Doe - Complete Blood Count / CBC Test)</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- Stages Section -->
+        <h2 class="section-title"><span>⚡</span> The 8 Stages of Healthcare Data Life Cycle</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Click on any stage card below to inspect its hospital workflow, data governance controls, and challenges:</p>
+        
+        <div class="stages-grid" id="stagesGrid">
+            <!-- Dynamic Injection via JavaScript -->
+        </div>
+
+        <div class="stage-detail-box" id="stageDetailBox">
+            <h2>Select a Stage Above</h2>
+            <p>Click on one of the life cycle cards to reveal comprehensive technical details and governance considerations.</p>
+        </div>
+
+        <!-- Live Practical Tool -->
+        <div class="tool-container">
+            <h2 class="section-title" style="margin-top:0;"><span>🛡️</span> Practical Live Demo: Automated Data Processing & Validation (Stage 3)</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                Test the automated governance script. This tool simulates how hospital HIS intercepts raw clinical entry errors, flags anomalies, and prevents corrupted data from entering storage:
+            </p>
+
+            <div class="form-group">
+                <label for="testType">Clinical Test Metric:</label>
+                <select id="testType">
+                    <option value="temp">Patient Temperature</option>
+                    <option value="hb">Hemoglobin Level (CBC Test)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="inputValue">Input Value (Numeric):</label>
+                <input type="number" id="inputValue" placeholder="Enter numeric value only (e.g. 102 or 10.2)">
+            </div>
+
+            <div class="form-group">
+                <label for="unitType">Unit Designation:</label>
+                <select id="unitType">
+                    <option value="none">-- Select Unit --</option>
+                    <option value="f">Fahrenheit (°F)</option>
+                    <option value="c">Celsius (°C)</option>
+                    <option value="gdl">g/dL</option>
+                </select>
+            </div>
+
+            <button class="btn-primary" onclick="validateData()">Run Governance & Validation Check</button>
+
+            <div id="validationResult" class="result-box"></div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div>Data Governance Course Project — Hospital Information Systems Analytics © 2026</div>
+        <div class="creator">Created by Bashaer Alfehaid</div>
+    </footer>
+
+    <script>
+        const stagesData = [
+            {
+                num: "Stage 1",
+                title: "Generation",
+                hospitalApp: "Point of care data creation, such as a nurse recording vital signs or barcode scanning a patient wristband in the emergency department.",
+                governance: "Ensuring ground-truth accuracy, mandatory field constraints, and standard clinical terminology adoption (e.g., SNOMED CT).",
+                challenge: "Human typing errors during rushed bedside charting."
+            },
+            {
+                num: "Stage 2",
+                title: "Collection",
+                hospitalApp: "Aggregating data from isolated silos (e.g., lab analyzer telemetry) into central EHR via HL7/FHIR messaging interface engines.",
+                governance: "Enforcing interoperability standards and Master Patient Index (MPI) matching to prevent duplicate records.",
+                challenge: "Data dropping due to network interface communication failures."
+            },
+            {
+                num: "Stage 3",
+                title: "Processing",
+                hospitalApp: "Automated scripts validating out-of-range clinical parameters, mapping diagnosis codes to ICD-10 standards.",
+                governance: "Defining rigorous automated cleansing rules while safeguarding rare clinical outliers from deletion.",
+                challenge: "Over-aggressive validation scripts deleting legitimate outlier readings."
+            },
+            {
+                num: "Stage 4",
+                title: "Storage",
+                hospitalApp: "Tiered storage architecture: high-speed SSDs for active patient files and encrypted cold storage for historical backups.",
+                governance: "Implementing AES-256 encryption at rest, secure PACS hosting, and defense against ransomware.",
+                challenge: "Advanced cyber-attacks and ransomware targeting healthcare databases."
+            },
+            {
+                num: "Stage 5",
+                title: "Management",
+                hospitalApp: "Data stewards overseeing access permissions, executing retention schedules, and maintaining user directories.",
+                governance: "Enforcing Role-Based Access Control (RBAC), immutable audit logs, and HIPAA privacy compliance.",
+                challenge: "Privilege creep when staff retain access after role transitions."
+            },
+            {
+                num: "Stage 6",
+                title: "Analysis",
+                hospitalApp: "Business intelligence teams querying data warehouses to evaluate institutional metrics and operational turnaround times.",
+                governance: "Ethical data use policies and mandatory dataset de-id/anonymization for operational research.",
+                challenge: "Analyzing incomplete datasets leading to biased institutional metrics."
+            },
+            {
+                num: "Stage 7",
+                title: "Visualization",
+                hospitalApp: "Deploying real-time executive and clinical dashboards in nursing stations showing live wait-time thresholds.",
+                governance: "Ensuring visual accuracy (locked zero-baseline axes) and restricting financial/mortality boards to leadership.",
+                challenge: "Misleading chart scales causing unnecessary panic or false complacency."
+            },
+            {
+                num: "Stage 8",
+                title: "Interpretation",
+                hospitalApp: "Hospital Quality Committees reviewing visual insights against real-world context to enact procedural changes.",
+                governance: "Mitigating confirmation bias via multidisciplinary review panels before enacting administrative policies.",
+                challenge: "Executive confirmation bias when interpreting ambiguous analytics."
+            }
+        ];
+
+        const grid = document.getElementById('stagesGrid');
+        stagesData.forEach((stage, index) => {
+            grid.innerHTML += `
+                <div class="stage-card" onclick="selectStage(${index})">
+                    <div class="stage-num">${stage.num}</div>
+                    <h3>${stage.title}</h3>
+                    <p>${stage.hospitalApp.substring(0, 55)}...</p>
+                </div>
+            `;
+        });
+
+        function selectStage(index) {
+            document.querySelectorAll('.stage-card').forEach((card, idx) => {
+                if(idx === index) card.classList.add('active');
+                else card.classList.remove('active');
+            });
+
+            const stage = stagesData[index];
+            const detailBox = document.getElementById('stageDetailBox');
+            detailBox.innerHTML = `
+                <h2>${stage.num}: ${stage.title}</h2>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <h4>Hospital Application Workflow</h4>
+                        <p>${stage.hospitalApp}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h4>Data Governance Controls</h4>
+                        <p>${stage.governance}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h4>Challenge & Recommended Solution</h4>
+                        <p>${stage.challenge}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function validateData() {
+            const testType = document.getElementById('testType').value;
+            const value = document.getElementById('inputValue').value;
+            const unit = document.getElementById('unitType').value;
+            const resultBox = document.getElementById('validationResult');
+
+            resultBox.style.display = 'block';
+
+            if (!value) {
+                resultBox.className = 'result-box result-error';
+                resultBox.innerHTML = '❌ <strong>Governance Blocked:</strong> Missing numerical input. Data quarantined to prevent corruption of the clinical repository.';
+                return;
+            }
+
+            if (unit === 'none') {
+                resultBox.className = 'result-box result-error';
+                resultBox.innerHTML = `⚠️ <strong>Processing Warning:</strong> Value (${value}) entered without unit designation! Ambiguous units pose fatal clinical risks. Flagged for human-in-the-loop review queue.`;
+                return;
+            }
+
+            if (testType === 'temp' && unit === 'f' && (value < 95 || value > 110)) {
+                resultBox.className = 'result-box result-error';
+                resultBox.innerHTML = `🚨 <strong>Quality Alert:</strong> Temperature value (${value}°F) is outside human physiological bounds. Record automatically routed to clinical exception queue.`;
+                return;
+            }
+
+            resultBox.className = 'result-box result-success';
+            resultBox.innerHTML = `✅ <strong>Validation Successful!</strong> Data point (${value} ${unit}) verified, encrypted (AES-256), and securely committed to the central EHR database in compliance with data governance policies.`;
+        }
+    </script>
+</body>
+</html>
