@@ -95,7 +95,7 @@
 
         .stage-card.active {
             border-color: var(--primary);
-            background: rgba(56, 189, 248, 0.05);
+            background: rgba(56, 189, 248, 0.08);
             box-shadow: 0 0 0 2px var(--primary);
         }
 
@@ -120,13 +120,12 @@
             color: var(--text-muted);
         }
 
-        /* Detail Box */
-        .stage-detail-box {
+        /* Tool Container */
+        .tool-container {
             background: var(--card-bg);
             border: 1px solid var(--primary);
             border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 3rem;
+            padding: 2.5rem;
             box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
             animation: fadeIn 0.4s ease-in-out;
         }
@@ -134,47 +133,6 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        .stage-detail-box h2 {
-            margin-top: 0;
-            color: var(--primary);
-            font-size: 1.6rem;
-        }
-
-        .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.2rem;
-        }
-
-        .detail-item {
-            background: rgba(15, 23, 42, 0.5);
-            padding: 1rem;
-            border-radius: 8px;
-            border-left: 3px solid var(--primary);
-        }
-
-        .detail-item h4 {
-            margin: 0 0 0.3rem 0;
-            color: var(--text-main);
-            font-size: 0.95rem;
-        }
-
-        .detail-item p {
-            margin: 0;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        /* Tool Container */
-        .tool-container {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2.5rem;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
         }
 
         .form-group {
@@ -245,6 +203,16 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
+        .info-panel {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
         footer {
             text-align: center;
             padding: 2rem;
@@ -274,50 +242,15 @@
         
         <!-- Stages Section -->
         <h2 class="section-title"><span>⚡</span> The 8 Stages of Healthcare Data Life Cycle</h2>
-        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Click on any stage card below to inspect its hospital workflow, data governance controls, and challenges:</p>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Click any stage card below to switch the interactive simulation tool and test its specific governance controls:</p>
         
         <div class="stages-grid" id="stagesGrid">
             <!-- Dynamic Injection via JavaScript -->
         </div>
 
-        <div class="stage-detail-box" id="stageDetailBox">
-            <h2>Select a Stage Above</h2>
-            <p>Click on one of the life cycle cards to reveal comprehensive technical details and governance considerations.</p>
-        </div>
-
-        <!-- Live Practical Tool -->
-        <div class="tool-container">
-            <h2 class="section-title" style="margin-top:0;"><span>🛡️</span> Practical Live Demo: Automated Data Processing & Validation (Stage 3)</h2>
-            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
-                Test the automated governance script. This tool simulates how hospital HIS intercepts raw clinical entry errors, flags anomalies, and prevents corrupted data from entering storage:
-            </p>
-
-            <div class="form-group">
-                <label for="testType">Clinical Test Metric:</label>
-                <select id="testType">
-                    <option value="temp">Patient Temperature</option>
-                    <option value="hb">Hemoglobin Level (CBC Test)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="inputValue">Input Value (Numeric):</label>
-                <input type="number" id="inputValue" placeholder="Enter numeric value only (e.g. 102 or 10.2)">
-            </div>
-
-            <div class="form-group">
-                <label for="unitType">Unit Designation:</label>
-                <select id="unitType">
-                    <option value="none">-- Select Unit --</option>
-                    <option value="f">Fahrenheit (°F)</option>
-                    <option value="c">Celsius (°C)</option>
-                    <option value="gdl">g/dL</option>
-                </select>
-            </div>
-
-            <button class="btn-primary" onclick="validateData()">Run Governance & Validation Check</button>
-
-            <div id="validationResult" class="result-box"></div>
+        <!-- Dynamic Interactive Tool Container -->
+        <div class="tool-container" id="toolContainer">
+            <!-- Dynamically populated based on selected stage -->
         </div>
 
     </div>
@@ -332,68 +265,208 @@
             {
                 num: "Stage 1",
                 title: "Generation",
-                hospitalApp: "Point of care data creation, such as a nurse recording vital signs or barcode scanning a patient wristband in the emergency department.",
-                governance: "Ensuring ground-truth accuracy, mandatory field constraints, and standard clinical terminology adoption (e.g., SNOMED CT).",
-                challenge: "Human typing errors during rushed bedside charting."
+                subtitle: "Point of Care Data Capture",
+                app: "Point of care data creation, such as a nurse recording vital signs or scanning a patient barcode wristband in the emergency department.",
+                gov: "Ensuring ground-truth accuracy, mandatory field constraints, and standard clinical terminology adoption (e.g., SNOMED CT).",
+                challenge: "Human typing errors during rushed bedside charting.",
+                toolHTML: `
+                    <h2 class="section-title" style="margin-top:0;"><span>📝</span> Interactive Simulation: Point of Care Generation</h2>
+                    <div class="info-panel"><strong>Workflow & Governance:</strong> Simulates bedside data input. Forces mandatory SNOMED CT terminology standard to prevent ambiguous free-text errors.</div>
+                    <div class="form-group">
+                        <label>Patient ID / Name:</label>
+                        <input type="text" value="John Doe (ID: 9942)" disabled style="opacity: 0.7;">
+                    </div>
+                    <div class="form-group">
+                        <label>Clinical Observation Entry:</label>
+                        <select id="genInput">
+                            <option value="">-- Select Standardized Term (SNOMED CT) --</option>
+                            <option value="valid">386725007 | Fever (finding)</option>
+                            <option value="valid">271649006 | Essential hypertension (disorder)</option>
+                            <option value="invalid">"Bad headache with some fever"</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="runGenTool()">Submit Ground-Truth Record</button>
+                    <div id="genResult" class="result-box"></div>
+                `
             },
             {
                 num: "Stage 2",
                 title: "Collection",
-                hospitalApp: "Aggregating data from isolated silos (e.g., lab analyzer telemetry) into central EHR via HL7/FHIR messaging interface engines.",
-                governance: "Enforcing interoperability standards and Master Patient Index (MPI) matching to prevent duplicate records.",
-                challenge: "Data dropping due to network interface communication failures."
+                subtitle: "Interoperability & Data Ingestion",
+                app: "Aggregating data from isolated silos (e.g., lab analyzer telemetry) into central EHR via HL7/FHIR messaging interface engines.",
+                gov: "Enforcing interoperability standards and Master Patient Index (MPI) matching to prevent duplicate records.",
+                challenge: "Data dropping due to network interface communication failures.",
+                toolHTML: `
+                    <h2 class="section-title" style="margin-top:0;"><span>🔄</span> Interactive Simulation: HL7/FHIR Collection Bridge</h2>
+                    <div class="info-panel"><strong>Workflow & Governance:</strong> Tests the middleware interface engine transferring lab analyzer results into the central EHR without dropping data packets.</div>
+                    <div class="form-group">
+                        <label>Simulate Network Interface Status:</label>
+                        <select id="colStatus">
+                            <option value="stable">Stable HL7 Connection (Fast Healthcare Interoperability)</option>
+                            <option value="fail">Network Interface Failure / Packet Drop</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="runColTool()">Execute Data Ingestion</button>
+                    <div id="colResult" class="result-box"></div>
+                `
             },
             {
                 num: "Stage 3",
                 title: "Processing",
-                hospitalApp: "Automated scripts validating out-of-range clinical parameters, mapping diagnosis codes to ICD-10 standards.",
-                governance: "Defining rigorous automated cleansing rules while safeguarding rare clinical outliers from deletion.",
-                challenge: "Over-aggressive validation scripts deleting legitimate outlier readings."
+                subtitle: "Automated Cleansing & Validation",
+                app: "Automated scripts validating out-of-range clinical parameters, mapping diagnosis codes to ICD-10 standards.",
+                gov: "Defining rigorous automated cleansing rules while safeguarding rare clinical outliers from deletion.",
+                challenge: "Over-aggressive validation scripts deleting legitimate outlier readings.",
+                toolHTML: `
+                    <h2 class="section-title" style="margin-top:0;"><span>🛡️</span> Interactive Simulation: Automated Validation Pipeline</h2>
+                    <div class="info-panel"><strong>Workflow & Governance:</strong> Filters raw clinical inputs, detects anomalies, and quarantines ambiguous metrics before database contamination.</div>
+                    <div class="form-group">
+                        <label>Clinical Test Metric:</label>
+                        <select id="testType">
+                            <option value="temp">Patient Temperature</option>
+                            <option value="hb">Hemoglobin Level (CBC Test)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Input Value (Numeric):</label>
+                        <input type="number" id="inputValue" placeholder="Enter numeric value (e.g. 102 or 10.2)">
+                    </div>
+                    <div class="form-group">
+                        <label>Unit Designation:</label>
+                        <select id="unitType">
+                            <option value="none">-- Select Unit --</option>
+                            <option value="f">Fahrenheit (°F)</option>
+                            <option value="c">Celsius (°C)</option>
+                            <option value="gdl">g/dL</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="runProcTool()">Run Governance & Validation Check</button>
+                    <div id="procResult" class="result-box"></div>
+                `
             },
             {
                 num: "Stage 4",
                 title: "Storage",
-                hospitalApp: "Tiered storage architecture: high-speed SSDs for active patient files and encrypted cold storage for historical backups.",
-                governance: "Implementing AES-256 encryption at rest, secure PACS hosting, and defense against ransomware.",
-                challenge: "Advanced cyber-attacks and ransomware targeting healthcare databases."
+                subtitle: "Secure Tiered Persistence & Encryption",
+                app: "Tiered storage architecture: high-speed SSDs for active patient files and encrypted cold storage for historical backups.",
+                gov: "Implementing AES-256 encryption at rest, secure PACS hosting, and defense against ransomware.",
+                challenge: "Advanced cyber-attacks and ransomware targeting healthcare databases.",
+                toolHTML: `
+                    <h2 class="section-title" style="margin-top:0;"><span>💾</span> Interactive Simulation: Tiered Storage & Encryption</h2>
+                    <div class="info-panel"><strong>Workflow & Governance:</strong> Applies industry-standard AES-256 encryption at rest and verifies immutable, air-gapped backups against ransomware.</div>
+                    <div class="form-group">
+                        <label>Select Storage Repository Tier:</label>
+                        <select id="storageTier">
+                            <option value="ssd">High-Speed SSD (Active Patient File / PACS)</option>
+                            <option value="cold">Encrypted Cold Storage (Disaster Recovery Backup)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Security Protocol Level:</label>
+                        <select id="securityLevel">
+                            <option value="aes256">AES-256 Encryption + Air-Gapped Backup</option>
+                            <option value="none">Unencrypted Legacy Storage</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="runStorageTool()">Commit Secure Storage</button>
+                    <div id="storageResult" class="result-box"></div>
+                `
             },
             {
                 num: "Stage 5",
                 title: "Management",
-                hospitalApp: "Data stewards overseeing access permissions, executing retention schedules, and maintaining user directories.",
-                governance: "Enforcing Role-Based Access Control (RBAC), immutable audit logs, and HIPAA privacy compliance.",
-                challenge: "Privilege creep when staff retain access after role transitions."
+                subtitle: "Stewardship, RBAC & Audit Logs",
+                app: "Data stewards overseeing access permissions, executing retention schedules, and maintaining user directories.",
+                gov: "Enforcing Role-Based Access Control (RBAC), immutable audit logs, and HIPAA privacy compliance.",
+                challenge: "Privilege creep when staff retain access after role transitions.",
+                toolHTML: `
+                    <h2 class="section-title" style="margin-top:0;"><span>👥</span> Interactive Simulation: RBAC & Privilege Control</h2>
+                    <div class="info-panel"><strong>Workflow & Governance:</strong> Manages role-based access permissions and prevents privilege creep by syncing with HR lifecycle directories.</div>
+                    <div class="form-group">
+                        <label>Staff Role & Status:</label>
+                        <select id="staffRole">
+                            <option value="resident_active">Resident Doctor (Active Rotation)</option>
+                            <option value="resident_ended">Resident Doctor (Rotation Completed / Expired)</option>
+                            <option value="admin">Data Steward / Compliance Officer</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="runMgmtTool()">Verify Access Rights & Audit Log</button>
+                    <div id="mgmtResult" class="result-box"></div>
+                `
             },
             {
                 num: "Stage 6",
                 title: "Analysis",
-                hospitalApp: "Business intelligence teams querying data warehouses to evaluate institutional metrics and operational turnaround times.",
-                governance: "Ethical data use policies and mandatory dataset de-id/anonymization for operational research.",
-                challenge: "Analyzing incomplete datasets leading to biased institutional metrics."
+                subtitle: "Business Intelligence & Quality Thresholds",
+                app: "Business intelligence teams querying data warehouses to evaluate institutional metrics and operational turnaround times.",
+                gov: "Ethical data use policies and mandatory dataset de-id/anonymization for operational research.",
+                challenge: "Analyzing incomplete datasets leading to biased institutional metrics.",
+                toolHTML: `
+                    <h2 class="section-title" style="margin-top:0;"><span>📊</span> Interactive Simulation: Dataset Quality Gate</h2>
+                    <div class="info-panel"><strong>Workflow & Governance:</strong> Enforces data completeness thresholds and dataset de-identification before allowing analytical queries.</div>
+                    <div class="form-group">
+                        <label>Dataset Completeness Ratio:</label>
+                        <select id="datasetQuality">
+                            <option value="high">98% Complete & Fully De-identified Dataset</option>
+                            <option value="low">65% Incomplete Dataset (Missing Patient Demographics)</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="runAnalysisTool()">Evaluate Analytics Clearance</button>
+                    <div id="analysisResult" class="result-box"></div>
+                `
             },
             {
                 num: "Stage 7",
                 title: "Visualization",
-                hospitalApp: "Deploying real-time executive and clinical dashboards in nursing stations showing live wait-time thresholds.",
-                governance: "Ensuring visual accuracy (locked zero-baseline axes) and restricting financial/mortality boards to leadership.",
-                challenge: "Misleading chart scales causing unnecessary panic or false complacency."
+                subtitle: "Executive Dashboards & Zero-Baseline Scales",
+                app: "Deploying real-time executive and clinical dashboards in nursing stations showing live wait-time thresholds.",
+                gov: "Ensuring visual accuracy (locked zero-baseline axes) and restricting financial/mortality boards to leadership.",
+                challenge: "Misleading chart scales causing unnecessary panic or false complacency.",
+                toolHTML: `
+                    <h2 class="section-title" style="margin-top:0;"><span>📈</span> Interactive Simulation: Dashboard Baseline Governance</h2>
+                    <div class="info-panel"><strong>Workflow & Governance:</strong> Standardizes dashboard templates with locked, zero-baseline axes to prevent visual distortion of emergency wait times.</div>
+                    <div class="form-group">
+                        <label>Select Dashboard Axis Configuration:</label>
+                        <select id="axisConfig">
+                            <option value="zero">Locked Zero-Baseline Axis (Standardized & Accurate)</option>
+                            <option value="truncated">Truncated Axis (Starts at 50m - Highly Misleading)</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="runVisTool()">Render Governance-Compliant Dashboard</button>
+                    <div id="visResult" class="result-box"></div>
+                `
             },
             {
                 num: "Stage 8",
                 title: "Interpretation",
-                hospitalApp: "Hospital Quality Committees reviewing visual insights against real-world context to enact procedural changes.",
-                governance: "Mitigating confirmation bias via multidisciplinary review panels before enacting administrative policies.",
-                challenge: "Executive confirmation bias when interpreting ambiguous analytics."
+                subtitle: "Multidisciplinary Review & Action Loop",
+                app: "Hospital Quality Committees reviewing visual insights against real-world context to enact procedural changes.",
+                gov: "Mitigating confirmation bias via multidisciplinary review panels before enacting administrative policies.",
+                challenge: "Executive confirmation bias when interpreting ambiguous analytics.",
+                toolHTML: `
+                    <h2 class="section-title" style="margin-top:0;"><span>🏛️</span> Interactive Simulation: Multidisciplinary Interpretation</h2>
+                    <div class="info-panel"><strong>Workflow & Governance:</strong> Requires multi-disciplinary panels (clinicians + data analysts) to review metrics and prevent single-administrator bias.</div>
+                    <div class="form-group">
+                        <label>Decision Review Committee Setup:</label>
+                        <select id="committeeSetup">
+                            <option value="multi">Multidisciplinary Panel (Clinician + Analyst + Quality Director)</option>
+                            <option value="single">Single Administrator Acting Alone</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="runInterpTool()">Submit Governance Decision</button>
+                    <div id="interpResult" class="result-box"></div>
+                `
             }
         ];
 
+        // Render Stage Cards
         const grid = document.getElementById('stagesGrid');
         stagesData.forEach((stage, index) => {
             grid.innerHTML += `
-                <div class="stage-card" onclick="selectStage(${index})">
+                <div class="stage-card ${index === 2 ? 'active' : ''}" onclick="selectStage(${index})">
                     <div class="stage-num">${stage.num}</div>
                     <h3>${stage.title}</h3>
-                    <p>${stage.hospitalApp.substring(0, 55)}...</p>
+                    <p>${stage.subtitle}</p>
                 </div>
             `;
         });
@@ -405,54 +478,141 @@
             });
 
             const stage = stagesData[index];
-            const detailBox = document.getElementById('stageDetailBox');
-            detailBox.innerHTML = `
-                <h2>${stage.num}: ${stage.title}</h2>
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <h4>Hospital Application Workflow</h4>
-                        <p>${stage.hospitalApp}</p>
-                    </div>
-                    <div class="detail-item">
-                        <h4>Data Governance Controls</h4>
-                        <p>${stage.governance}</p>
-                    </div>
-                    <div class="detail-item">
-                        <h4>Challenge & Recommended Solution</h4>
-                        <p>${stage.challenge}</p>
-                    </div>
-                </div>
-            `;
+            const container = document.getElementById('toolContainer');
+            container.innerHTML = stage.toolHTML;
         }
 
-        function validateData() {
+        // Initialize with Stage 3 (Processing)
+        selectStage(2);
+
+        // Tool Functions
+        function runGenTool() {
+            const val = document.getElementById('genInput').value;
+            const res = document.getElementById('genResult');
+            res.style.display = 'block';
+            if(val === 'valid') {
+                res.className = 'result-box result-success';
+                res.innerHTML = '✅ <strong>Ground Truth Established:</strong> Standardized SNOMED CT terminology accepted. Data validated at point of care without ambiguity.';
+            } else if(val === 'invalid') {
+                res.className = 'result-box result-error';
+                res.innerHTML = '❌ <strong>Governance Blocked:</strong> Free-text error detected! System rejected unstructured text to prevent downstream analytical distortion.';
+            } else {
+                res.className = 'result-box result-error';
+                res.innerHTML = '⚠️ Please select a standardized clinical term.';
+            }
+        }
+
+        function runColTool() {
+            const status = document.getElementById('colStatus').value;
+            const res = document.getElementById('colResult');
+            res.style.display = 'block';
+            if(status === 'stable') {
+                res.className = 'result-box result-success';
+                res.innerHTML = '✅ <strong>Collection Successful:</strong> Middleware interface successfully transferred lab telemetry via HL7/FHIR into central EHR with zero data drop.';
+            } else {
+                res.className = 'result-box result-error';
+                res.innerHTML = '🚨 <strong>Interface Failure:</strong> Data packet dropped due to network timeout. Automated acknowledgment queue triggered re-transmission.';
+            }
+        }
+
+        function runProcTool() {
             const testType = document.getElementById('testType').value;
             const value = document.getElementById('inputValue').value;
             const unit = document.getElementById('unitType').value;
-            const resultBox = document.getElementById('validationResult');
-
-            resultBox.style.display = 'block';
+            const res = document.getElementById('procResult');
+            res.style.display = 'block';
 
             if (!value) {
-                resultBox.className = 'result-box result-error';
-                resultBox.innerHTML = '❌ <strong>Governance Blocked:</strong> Missing numerical input. Data quarantined to prevent corruption of the clinical repository.';
+                res.className = 'result-box result-error';
+                res.innerHTML = '❌ <strong>Governance Blocked:</strong> Missing numerical input. Data quarantined to prevent repository corruption.';
                 return;
             }
-
             if (unit === 'none') {
-                resultBox.className = 'result-box result-error';
-                resultBox.innerHTML = `⚠️ <strong>Processing Warning:</strong> Value (${value}) entered without unit designation! Ambiguous units pose fatal clinical risks. Flagged for human-in-the-loop review queue.`;
+                res.className = 'result-box result-error';
+                res.innerHTML = `⚠️ <strong>Processing Warning:</strong> Value (${value}) entered without unit designation! Flagged for human-in-the-loop review queue.`;
                 return;
             }
-
             if (testType === 'temp' && unit === 'f' && (value < 95 || value > 110)) {
-                resultBox.className = 'result-box result-error';
-                resultBox.innerHTML = `🚨 <strong>Quality Alert:</strong> Temperature value (${value}°F) is outside human physiological bounds. Record automatically routed to clinical exception queue.`;
+                res.className = 'result-box result-error';
+                res.innerHTML = `🚨 <strong>Quality Alert:</strong> Temperature value (${value}°F) outside physiological bounds. Routed to exception queue.`;
                 return;
             }
+            res.className = 'result-box result-success';
+            res.innerHTML = `✅ <strong>Validation Successful!</strong> Data point (${value} ${unit}) verified, encrypted (AES-256), and committed to central EHR.`;
+        }
 
-            resultBox.className = 'result-box result-success';
-            resultBox.innerHTML = `✅ <strong>Validation Successful!</strong> Data point (${value} ${unit}) verified, encrypted (AES-256), and securely committed to the central EHR database in compliance with data governance policies.`;
+        function runStorageTool() {
+            const tier = document.getElementById('storageTier').value;
+            const sec = document.getElementById('securityLevel').value;
+            const res = document.getElementById('storageResult');
+            res.style.display = 'block';
+
+            if(sec === 'aes256') {
+                res.className = 'result-box result-success';
+                res.innerHTML = `✅ <strong>Storage Secured:</strong> Data successfully committed to ${tier.toUpperCase()} tier with AES-256 encryption and air-gapped ransomware protection.`;
+            } else {
+                res.className = 'result-box result-error';
+                res.innerHTML = '🚨 <strong>Compliance Violation:</strong> Unencrypted storage violates HIPAA security rule standards. Access denied!';
+            }
+        }
+
+        function runMgmtTool() {
+            const role = document.getElementById('staffRole').value;
+            const res = document.getElementById('mgmtResult');
+            res.style.display = 'block';
+
+            if(role === 'resident_ended') {
+                res.className = 'result-box result-error';
+                res.innerHTML = '🛡️ <strong>Privilege Creep Blocked:</strong> HR synchronization detected expired rotation. System automatically revoked EHR access rights and logged event in immutable audit trail.';
+            } else if(role === 'resident_active') {
+                res.className = 'result-box result-success';
+                res.innerHTML = '✅ <strong>RBAC Enforced:</strong> Active resident granted role-specific clinical view permissions. Immutable audit log recording access.';
+            } else {
+                res.className = 'result-box result-success';
+                res.innerHTML = '✅ <strong>Stewardship Authorized:</strong> Data steward privilege verified with full audit logging enabled.';
+            }
+        }
+
+        function runAnalysisTool() {
+            const q = document.getElementById('datasetQuality').value;
+            const res = document.getElementById('analysisResult');
+            res.style.display = 'block';
+
+            if(q === 'high') {
+                res.className = 'result-box result-success';
+                res.innerHTML = '✅ <strong>Analytics Cleared:</strong> Dataset meets 95% quality threshold and HIPAA de-identification standards. BI query executed safely.';
+            } else {
+                res.className = 'result-box result-error';
+                res.innerHTML = '❌ <strong>Quality Gate Blocked:</strong> Incomplete dataset rejected to prevent biased institutional turnaround calculations.';
+            }
+        }
+
+        function runVisTool() {
+            const axis = document.getElementById('axisConfig').value;
+            const res = document.getElementById('visResult');
+            res.style.display = 'block';
+
+            if(axis === 'zero') {
+                res.className = 'result-box result-success';
+                res.innerHTML = '✅ <strong>Dashboard Rendered Accurately:</strong> Locked zero-baseline axis applied. Provides true proportional comparison of emergency wait times.';
+            } else {
+                res.className = 'result-box result-error';
+                res.innerHTML = '🚨 <strong>Visual Distortion Warning:</strong> Truncated axis creates false panic/complacency. Governance policy mandates zero-baseline templates.';
+            }
+        }
+
+        function runInterpTool() {
+            const setup = document.getElementById('committeeSetup').value;
+            const res = document.getElementById('interpResult');
+            res.style.display = 'block';
+
+            if(setup === 'multi') {
+                res.className = 'result-box result-success';
+                res.innerHTML = '✅ <strong>Decision Approved:</strong> Multidisciplinary review panel successfully mitigated confirmation bias, ensuring evidence-based clinical policy enactment.';
+            } else {
+                res.className = 'result-box result-error';
+                res.innerHTML = '⚠️ <strong>Governance Warning:</strong> Single-administrator interpretation violates institutional control policies and risks unsupported conclusions.';
+            }
         }
     </script>
 </body>
