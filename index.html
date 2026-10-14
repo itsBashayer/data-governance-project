@@ -6,18 +6,18 @@
     <title>Hospital Data Governance & Life Cycle Simulator</title>
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --card-bg: #1e293b;
-            --card-hover: #334155;
-            --primary: #38bdf8;
-            --primary-hover: #0ea5e9;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --bg-dark: #000000;
+            --card-bg: #121212;
+            --card-hover: #1f1f1f;
+            --primary: #ef4444;
+            --primary-hover: #dc2626;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
             --success: #22c55e;
             --success-bg: rgba(34, 197, 94, 0.1);
             --danger: #ef4444;
             --danger-bg: rgba(239, 68, 68, 0.1);
-            --border: #334155;
+            --border: #262626;
         }
 
         body {
@@ -30,12 +30,12 @@
         }
 
         header {
-            background: linear-gradient(135deg, #1e293b, #0284c7);
+            background: linear-gradient(135deg, #121212, #990000);
             color: white;
             padding: 3rem 1rem;
             text-align: center;
-            border-bottom: 1px solid var(--border);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--primary);
+            box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.2);
         }
 
         header h1 {
@@ -60,7 +60,7 @@
             font-size: 1.5rem;
             color: var(--primary);
             margin-bottom: 1.5rem;
-            border-bottom: 2px solid var(--border);
+            border-bottom: 1px solid var(--border);
             padding-bottom: 0.5rem;
             display: flex;
             align-items: center;
@@ -90,12 +90,12 @@
             transform: translateY(-4px);
             background: var(--card-hover);
             border-color: var(--primary);
-            box-shadow: 0 10px 20px -10px rgba(56, 189, 248, 0.3);
+            box-shadow: 0 10px 20px -10px rgba(239, 68, 68, 0.3);
         }
 
         .stage-card.active {
             border-color: var(--primary);
-            background: rgba(56, 189, 248, 0.08);
+            background: rgba(239, 68, 68, 0.08);
             box-shadow: 0 0 0 2px var(--primary);
         }
 
@@ -126,7 +126,7 @@
             border: 1px solid var(--primary);
             border-radius: 12px;
             padding: 2.5rem;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
             animation: fadeIn 0.4s ease-in-out;
         }
 
@@ -149,7 +149,7 @@
         select, input {
             width: 100%;
             padding: 0.85rem;
-            background: #0f172a;
+            background: #000000;
             border: 1px solid var(--border);
             border-radius: 8px;
             color: var(--text-main);
@@ -161,12 +161,12 @@
         select:focus, input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
         }
 
         button.btn-primary {
             background-color: var(--primary);
-            color: #0f172a;
+            color: #ffffff;
             border: none;
             padding: 0.85rem 2rem;
             font-size: 1rem;
@@ -204,7 +204,7 @@
         }
 
         .info-panel {
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(20, 20, 20, 0.8);
             padding: 1rem 1.25rem;
             border-radius: 8px;
             margin-bottom: 1.5rem;
@@ -216,7 +216,7 @@
         footer {
             text-align: center;
             padding: 2rem;
-            background: #0b1120;
+            background: #050505;
             color: var(--text-muted);
             font-size: 0.95rem;
             border-top: 1px solid var(--border);
@@ -266,9 +266,6 @@
                 num: "Stage 1",
                 title: "Generation",
                 subtitle: "Point of Care Data Capture",
-                app: "Point of care data creation, such as a nurse recording vital signs or scanning a patient barcode wristband in the emergency department.",
-                gov: "Ensuring ground-truth accuracy, mandatory field constraints, and standard clinical terminology adoption (e.g., SNOMED CT).",
-                challenge: "Human typing errors during rushed bedside charting.",
                 toolHTML: `
                     <h2 class="section-title" style="margin-top:0;"><span>📝</span> Interactive Simulation: Point of Care Generation</h2>
                     <div class="info-panel"><strong>Workflow & Governance:</strong> Simulates bedside data input. Forces mandatory SNOMED CT terminology standard to prevent ambiguous free-text errors.</div>
@@ -293,9 +290,6 @@
                 num: "Stage 2",
                 title: "Collection",
                 subtitle: "Interoperability & Data Ingestion",
-                app: "Aggregating data from isolated silos (e.g., lab analyzer telemetry) into central EHR via HL7/FHIR messaging interface engines.",
-                gov: "Enforcing interoperability standards and Master Patient Index (MPI) matching to prevent duplicate records.",
-                challenge: "Data dropping due to network interface communication failures.",
                 toolHTML: `
                     <h2 class="section-title" style="margin-top:0;"><span>🔄</span> Interactive Simulation: HL7/FHIR Collection Bridge</h2>
                     <div class="info-panel"><strong>Workflow & Governance:</strong> Tests the middleware interface engine transferring lab analyzer results into the central EHR without dropping data packets.</div>
@@ -314,9 +308,6 @@
                 num: "Stage 3",
                 title: "Processing",
                 subtitle: "Automated Cleansing & Validation",
-                app: "Automated scripts validating out-of-range clinical parameters, mapping diagnosis codes to ICD-10 standards.",
-                gov: "Defining rigorous automated cleansing rules while safeguarding rare clinical outliers from deletion.",
-                challenge: "Over-aggressive validation scripts deleting legitimate outlier readings.",
                 toolHTML: `
                     <h2 class="section-title" style="margin-top:0;"><span>🛡️</span> Interactive Simulation: Automated Validation Pipeline</h2>
                     <div class="info-panel"><strong>Workflow & Governance:</strong> Filters raw clinical inputs, detects anomalies, and quarantines ambiguous metrics before database contamination.</div>
@@ -348,9 +339,6 @@
                 num: "Stage 4",
                 title: "Storage",
                 subtitle: "Secure Tiered Persistence & Encryption",
-                app: "Tiered storage architecture: high-speed SSDs for active patient files and encrypted cold storage for historical backups.",
-                gov: "Implementing AES-256 encryption at rest, secure PACS hosting, and defense against ransomware.",
-                challenge: "Advanced cyber-attacks and ransomware targeting healthcare databases.",
                 toolHTML: `
                     <h2 class="section-title" style="margin-top:0;"><span>💾</span> Interactive Simulation: Tiered Storage & Encryption</h2>
                     <div class="info-panel"><strong>Workflow & Governance:</strong> Applies industry-standard AES-256 encryption at rest and verifies immutable, air-gapped backups against ransomware.</div>
@@ -376,9 +364,6 @@
                 num: "Stage 5",
                 title: "Management",
                 subtitle: "Stewardship, RBAC & Audit Logs",
-                app: "Data stewards overseeing access permissions, executing retention schedules, and maintaining user directories.",
-                gov: "Enforcing Role-Based Access Control (RBAC), immutable audit logs, and HIPAA privacy compliance.",
-                challenge: "Privilege creep when staff retain access after role transitions.",
                 toolHTML: `
                     <h2 class="section-title" style="margin-top:0;"><span>👥</span> Interactive Simulation: RBAC & Privilege Control</h2>
                     <div class="info-panel"><strong>Workflow & Governance:</strong> Manages role-based access permissions and prevents privilege creep by syncing with HR lifecycle directories.</div>
@@ -398,9 +383,6 @@
                 num: "Stage 6",
                 title: "Analysis",
                 subtitle: "Business Intelligence & Quality Thresholds",
-                app: "Business intelligence teams querying data warehouses to evaluate institutional metrics and operational turnaround times.",
-                gov: "Ethical data use policies and mandatory dataset de-id/anonymization for operational research.",
-                challenge: "Analyzing incomplete datasets leading to biased institutional metrics.",
                 toolHTML: `
                     <h2 class="section-title" style="margin-top:0;"><span>📊</span> Interactive Simulation: Dataset Quality Gate</h2>
                     <div class="info-panel"><strong>Workflow & Governance:</strong> Enforces data completeness thresholds and dataset de-identification before allowing analytical queries.</div>
@@ -419,9 +401,6 @@
                 num: "Stage 7",
                 title: "Visualization",
                 subtitle: "Executive Dashboards & Zero-Baseline Scales",
-                app: "Deploying real-time executive and clinical dashboards in nursing stations showing live wait-time thresholds.",
-                gov: "Ensuring visual accuracy (locked zero-baseline axes) and restricting financial/mortality boards to leadership.",
-                challenge: "Misleading chart scales causing unnecessary panic or false complacency.",
                 toolHTML: `
                     <h2 class="section-title" style="margin-top:0;"><span>📈</span> Interactive Simulation: Dashboard Baseline Governance</h2>
                     <div class="info-panel"><strong>Workflow & Governance:</strong> Standardizes dashboard templates with locked, zero-baseline axes to prevent visual distortion of emergency wait times.</div>
@@ -440,9 +419,6 @@
                 num: "Stage 8",
                 title: "Interpretation",
                 subtitle: "Multidisciplinary Review & Action Loop",
-                app: "Hospital Quality Committees reviewing visual insights against real-world context to enact procedural changes.",
-                gov: "Mitigating confirmation bias via multidisciplinary review panels before enacting administrative policies.",
-                challenge: "Executive confirmation bias when interpreting ambiguous analytics.",
                 toolHTML: `
                     <h2 class="section-title" style="margin-top:0;"><span>🏛️</span> Interactive Simulation: Multidisciplinary Interpretation</h2>
                     <div class="info-panel"><strong>Workflow & Governance:</strong> Requires multi-disciplinary panels (clinicians + data analysts) to review metrics and prevent single-administrator bias.</div>
